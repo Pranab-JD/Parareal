@@ -28,9 +28,14 @@ int main(int argc, char** argv)
     double tol = atof(argv[3]);         // User-specified tolerance
     double t_final = atof(argv[4]);     // Final simulation time
     string movie = "no";                // Default
-
     if (sizeof(argv) == 5)
         movie = argv[5];                // Set to "yes" to write data for plots/movie
+    
+    int num_threads;
+    #pragma omp parallel
+    {
+        num_threads = omp_get_num_threads();
+    }
     
     //! Set GPU spport to false
     bool GPU_access = false;
@@ -179,8 +184,8 @@ int main(int argc, char** argv)
 
 
     //? Create directory to write simulation results/parameters
-    int sys_value = system(("mkdir -p ./" + integrator + "/cores_1").c_str());
-    string directory = "./" + integrator + "/cores_1";
+    int sys_value = system(("mkdir -p ./" + integrator + "/cores_" + to_string(num_threads)).c_str());
+    string directory = "./" + integrator + "/cores_" + to_string(num_threads);
     string results = directory + "/Parameters.txt";
     ofstream params;
     params.open(results);
@@ -189,6 +194,7 @@ int main(int argc, char** argv)
     params << "Tolerance (for implicit methods): " << tol << endl;
     params << "Simulation time: " << time << endl;
     params << "Total number of time steps: " << time_steps << endl;
+    params << "Number of OpenMP threads: " << num_threads << endl;
     params << endl;
     params << "Total iterations (for implicit methods): " << iters_total << endl;
     params << setprecision(16) << "Runtime (s): " << time_loop.total() << endl;
