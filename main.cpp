@@ -27,10 +27,11 @@ int main(int argc, char** argv)
     double n_cfl = atof(argv[2]);       // dt = n_cfl * dt_cfl
     double tol = atof(argv[3]);         // User-specified tolerance
     double t_final = atof(argv[4]);     // Final simulation time
-    string movie = argv[5];             // "yes" to write data for plots/movie
+    string movie = "no";                // Default
 
-    cout << endl << movie << endl << endl;
-
+    if (sizeof(argv) == 5)
+        movie = argv[5];                // Set to "yes" to write data for plots/movie
+    
     //! Set GPU spport to false
     bool GPU_access = false;
 
