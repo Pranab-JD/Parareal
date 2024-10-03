@@ -36,6 +36,7 @@ int main(int argc, char** argv)
     #pragma omp parallel
     {
         num_threads = omp_get_num_threads();
+        #pragma omp single
         cout << "Using " << num_threads << "OpenMP threads." << endl ;
     }
     
