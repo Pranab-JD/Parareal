@@ -23,18 +23,20 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-    int index = atoi(argv[1]);          // N = 2^index * 2^index
-    double n_cfl = atof(argv[2]);       // dt = n_cfl * dt_cfl
-    double tol = atof(argv[3]);         // User-specified tolerance
-    double t_final = atof(argv[4]);     // Final simulation time
-    string movie = "no";                // Default
-    if (sizeof(argv) == 5)
-        movie = argv[5];                // Set to "yes" to write data for plots/movie
+    int index = atoi(argv[1]);              // N = 2^index * 2^index
+    double n_cfl = atof(argv[2]);           // dt = n_cfl * dt_cfl
+    double tol = atof(argv[3]);             // User-specified tolerance
+    int num_time_steps = atoi(argv[4]);     // Final simulation time
     
-    int num_threads;
+    string movie = "no";                    // Default param = "no"
+    if (sizeof(argv) == 5)
+        movie = argv[5];                    // Set to "yes" to write data for plots/movie
+    
+    int num_threads;                        // # of OpenMP threads
     #pragma omp parallel
     {
         num_threads = omp_get_num_threads();
+        cout << "Using " << num_threads << "OpenMP threads." << endl ;
     }
     
     //! Set GPU spport to false
@@ -64,14 +66,14 @@ int main(int argc, char** argv)
     double velocity = 10;                                   // Advection speed
 
     //* Temporal parameters
-    double time = 0;                                        // Simulation time elapsed                          
-    int time_steps = 0;                                     // # time steps
-
     double dif_cfl = (dx*dx * dy*dy)/(2*dx*dx + 2*dy*dy);   // Diffusion CFL
     double adv_cfl = dx*dy/(velocity * (dx + dy));          // Advection CFL
     double dt = n_cfl*min(dif_cfl, adv_cfl);                // Step size
 
-    cout << endl << "N = " << N << ", tol = " << tol << ", T_f = " << t_final << endl;
+    double time = 0;                                        // Simulation time elapsed                          
+    int time_steps = 0;                                     // # time steps
+
+    cout << endl << "N = " << N << ", tol = " << tol << ", Time steps = " << num_time_steps << endl;
     cout << "N_cfl = " << n_cfl << ", CFL: " << min(dif_cfl, adv_cfl) << ", dt = " << dt << endl << endl;
 
     int iters = 0;                                          //* # of iterations per time step
@@ -81,7 +83,7 @@ int main(int argc, char** argv)
     string problem = "Diff_Adv_2D";
     string integrator = "Explicit_Euler";
 
-    //! Diffusion-Advection or Diffusion-Advection + Sources
+    //! Diffusion-Advection (+ Sources)
     RHS_Dif_Adv_2D RHS(n, dx, dy, velocity); 
 
     if (problem == "Diff_Adv_2D")
@@ -102,14 +104,35 @@ int main(int argc, char** argv)
 
     //! Allocate memory on CPU
     size_t N_size = N * sizeof(double);
-    double *u = (double*)malloc(N_size);
+    double* u = (double*)malloc(N_size);
     copy(u_init.begin(), u_init.end(), u);
-    double *u_sol = (double*)malloc(N_size);            //* Solution vector
+    double* u_sol = (double*)malloc(N_size);            //* Solution vector
+    double* u_temp;                                     //* Temporary vector(s) for integrators
 
-    // if (integrator == "Explicit_Euler")
-    // {
-        double* u_temp = (double*)malloc(N_size);            //* Solution vector
-    // }
+    if (integrator == "Explicit_Euler")
+    {
+        u_temp = (double*)malloc(N_size);
+    }
+    else if (integrator == "RK2")
+    {
+        u_temp = (double*)malloc(2*N_size);
+    }
+    else if (integrator == "RK4")
+    {
+        u_temp = (double*)malloc(4*N_size);
+    }
+    else if (integrator == "Implicit_Euler")
+    {
+        u_temp = (double*)malloc(2*N_size);
+    }
+    else if (integrator == "CN")
+    {
+        u_temp = (double*)malloc(2*N_size);
+    }
+    else
+    {
+        cout << "Incorrect integrator!";
+    }
 
 
     //! Create directories (for movies)
@@ -123,13 +146,8 @@ int main(int argc, char** argv)
     LeXInt::timer time_loop;
     time_loop.start();
 
-    while (time < t_final)
+    for (int nn = 0; nn < num_time_steps; nn++)
     {
-        //* Final time step
-        if (time + dt >= t_final)
-        {
-            dt = t_final - time;
-        }
 
         //? ------------- List of integrators ------------- ?//
 
@@ -152,7 +170,7 @@ int main(int argc, char** argv)
         //? Update solution
         copy_Cpp(u_sol, u, N);
 
-        if (time_steps % 100 == 0)
+        if (time_steps % 5 == 0)
         {
             cout << "Time step      : " << time_steps << endl;
             cout << "Simulation time: " << time << endl << endl;
