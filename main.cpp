@@ -27,19 +27,15 @@ int main(int argc, char** argv)
     double n_cfl = atof(argv[2]);           // dt = n_cfl * dt_cfl
     double tol = atof(argv[3]);             // User-specified tolerance
     int num_time_steps = atoi(argv[4]);     // Final simulation time
-    
+
     string movie = "no";                    // Default param = "no"
-    if (sizeof(argv) == 5)
+    if (argc == 6)
         movie = argv[5];                    // Set to "yes" to write data for plots/movie
-    
+
     int num_threads;                        // # of OpenMP threads
     #pragma omp parallel
-    {
-        num_threads = omp_get_num_threads();
-        #pragma omp single
-        cout << "Using " << num_threads << "OpenMP threads." << endl ;
-    }
-    
+    num_threads = omp_get_num_threads();
+
     //! Set GPU spport to false
     bool GPU_access = false;
 
@@ -122,14 +118,6 @@ int main(int argc, char** argv)
     {
         u_temp = (double*)malloc(4*N_size);
     }
-    else if (integrator == "Implicit_Euler")
-    {
-        u_temp = (double*)malloc(2*N_size);
-    }
-    else if (integrator == "CN")
-    {
-        u_temp = (double*)malloc(2*N_size);
-    }
     else
     {
         cout << "Incorrect integrator!";
@@ -156,9 +144,17 @@ int main(int argc, char** argv)
         {
             explicit_Euler(RHS, u, u_sol, u_temp, dt, N);
         }
-        else if (integrator == "Implicit_Euler")
+        else if (integrator == "RK2")
         {
 
+        }
+        else if (integrator == "RK4")
+        {
+
+        }
+        else
+        {
+            cout << "Incorrect integrator. Please recheck!" << endl;
         }
 
         //? ----------------------------------------------- ?//
@@ -178,9 +174,9 @@ int main(int argc, char** argv)
         }
 
         //! Write data to files (for movies)
-        if (time_steps % 100 == 0 && movie == "yes")
+        if (time_steps % 2 == 0 && movie == "yes")
         {
-        
+            cout << "Writing data to files at the " << time_steps << "th time step" << endl;
             string output_data = "./movie/" +  to_string(time_steps) + ".txt";
             ofstream data;
             data.open(output_data); 
@@ -199,6 +195,7 @@ int main(int argc, char** argv)
     cout << "Total number of time steps : " << time_steps << endl;
     cout << "Total number of iterations : " << iters_total << endl;
     cout << "Total time elapsed (s)     : " << time_loop.total() << endl;
+    cout << "Number of OpenMP threads   : " << num_threads << endl;
     cout << "==================================================" << endl << endl;
 
 
