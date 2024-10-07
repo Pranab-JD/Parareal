@@ -9,11 +9,11 @@ git clone https://github.com/Pranab-JD/Parareal.git
 cd Parareal
 mkdir build && cd build
 ```
-4. Compile the code
+3. Compile the code
 ``` shell
 bash ../compile.sh
 ```
-5. Run the code
+4. Run the code
 ``` shell
 bash ../run.sh
 ```
