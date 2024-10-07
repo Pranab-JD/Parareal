@@ -6,8 +6,7 @@ git clone https://github.com/Pranab-JD/Parareal.git
 ```
 2. Create build directory
 ``` shell
-cd Parareal
-mkdir build && cd build
+cd Parareal && mkdir build && cd build
 ```
 3. Compile the code
 ``` shell
