@@ -69,12 +69,11 @@ int main(int argc, char** argv)
 
     double time = 0;                                        // Simulation time elapsed                          
     int time_steps = 0;                                     // # time steps
+    int iters = 0;                                          // # of iterations per time step
+    int iters_total = 0;                                    // Total # of iterations during the simulation
 
     cout << endl << "N = " << N << ", tol = " << tol << ", Time steps = " << num_time_steps << endl;
     cout << "N_cfl = " << n_cfl << ", CFL: " << min(dif_cfl, adv_cfl) << ", dt = " << dt << endl << endl;
-
-    int iters = 0;                                          //* # of iterations per time step
-    int iters_total = 0;                                    //* Total # of iterations during the simulation
 
     //? Choose problem and integrator
     string problem = "Diff_Adv_2D";
@@ -123,7 +122,6 @@ int main(int argc, char** argv)
         cout << "Incorrect integrator!";
     }
 
-
     //! Create directories (for movies)
     if (movie == "yes")
     {
@@ -134,6 +132,8 @@ int main(int argc, char** argv)
     //! Time Loop
     LeXInt::timer time_loop;
     time_loop.start();
+
+    cout << "Running the 2D diffusion--advection problem with the " << integrator << " integrator." << endl << endl;
 
     for (int nn = 0; nn < num_time_steps; nn++)
     {
