@@ -110,7 +110,7 @@ int main(int argc, char** argv)
 
     if (integrator == "Explicit_Euler")
     {
-
+	u_temp = (double*)malloc(N_size);
     }
     else if (integrator == "RK2")
     {

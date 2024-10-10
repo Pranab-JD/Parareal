@@ -29,7 +29,7 @@ void explicit_Euler(rhs RHS, double* u, double* u_sol, double* u_temp,double dt,
 }
 
 template <typename rhs>
-void Runge_Kutta2(rhs RHS, double* u, double* u_sol, double* u_temp, double dt, size_t N)
+void RK2(rhs RHS, double* u, double* u_sol, double* u_temp, double dt, size_t N)
 {
     double* k1 = new double[N];
     double* k2 = new double[N];
@@ -43,7 +43,7 @@ void Runge_Kutta2(rhs RHS, double* u, double* u_sol, double* u_temp, double dt, 
 }
 
 template <typename rhs>
-void Runge_Kutta4(rhs RHS, double* u, double* u_sol, double* u_temp, double dt, size_t N)
+void RK4(rhs RHS, double* u, double* u_sol, double* u_temp, double dt, size_t N)
 {
     double* k1 = new double[N];
     double* k2 = new double[N];
