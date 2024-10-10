@@ -36,8 +36,6 @@ int main(int argc, char** argv)
     if (argc == 7)
         movie = argv[6];                    // Set to "yes" to write data for plots/movie
 
-    cout << integrator << "     " << movie << endl;
-
     int num_threads;                        // # of OpenMP threads
     #pragma omp parallel
     num_threads = omp_get_num_threads();
