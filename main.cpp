@@ -107,7 +107,7 @@ int main(int argc, char** argv)
 
     if (integrator == "Explicit_Euler")
     {
-        u_temp = (double*)malloc(N_size);
+
     }
     else if (integrator == "RK2")
     {
@@ -146,11 +146,11 @@ int main(int argc, char** argv)
         }
         else if (integrator == "RK2")
         {
-
+            RK2(RHS, u, u_sol, u_temp, dt, N);
         }
         else if (integrator == "RK4")
         {
-
+            RK4(RHS, u, u_sol, u_temp, dt, N);
         }
         else
         {
@@ -174,7 +174,7 @@ int main(int argc, char** argv)
         }
 
         //! Write data to files (for movies)
-        if (time_steps % 2 == 0 && movie == "yes")
+        if (time_steps % 5 == 0 && movie == "yes")
         {
             cout << "Writing data to files at the " << time_steps << "th time step" << endl;
             string output_data = "./movie/" +  to_string(time_steps) + ".txt";
