@@ -79,8 +79,6 @@ int main(int argc, char** argv)
     cout << endl << "N = " << N << ", tol = " << tol << ", Time steps = " << num_time_steps << endl;
     cout << "N_cfl = " << n_cfl << ", CFL: " << min(dif_cfl, adv_cfl) << ", dt = " << dt << endl << endl;
 
-
-
     //! Diffusion-Advection (+ Sources)
     string problem = "Diff_Adv_2D";
     RHS_Dif_Adv_2D RHS(n, dx, dy, velocity); 
@@ -122,7 +120,8 @@ int main(int argc, char** argv)
     }
     else
     {
-        cout << "Incorrect integrator!";
+        cout << "Incorrect integrator! Please recheck. Terminating simulations ... " << endl << endl;
+        return 1;
     }
 
     //! Create directories (for movies)
@@ -157,7 +156,8 @@ int main(int argc, char** argv)
         }
         else
         {
-            cout << "Incorrect integrator. Please recheck!" << endl;
+            cout << "Incorrect integrator! Please recheck. Terminating simulations ... " << endl << endl;
+            return 1;
         }
 
         //? ----------------------------------------------- ?//
