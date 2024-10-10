@@ -110,13 +110,9 @@ int main(int argc, char** argv)
     {
 
     }
-    else if (integrator == "RK2")
+    else if (integrator == "RK2" or "RK4")
     {
         u_temp = (double*)malloc(2*N_size);
-    }
-    else if (integrator == "RK4")
-    {
-        u_temp = (double*)malloc(4*N_size);
     }
     else
     {
