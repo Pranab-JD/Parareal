@@ -28,9 +28,15 @@ int main(int argc, char** argv)
     double tol = atof(argv[3]);             // User-specified tolerance
     int num_time_steps = atoi(argv[4]);     // Final simulation time
 
+    string integrator = "Explicit_Euler";   // Integrator
+    if (argc >= 6)
+        integrator = argv[5];
+
     string movie = "no";                    // Default param = "no"
-    if (argc == 6)
-        movie = argv[5];                    // Set to "yes" to write data for plots/movie
+    if (argc == 7)
+        movie = argv[6];                    // Set to "yes" to write data for plots/movie
+
+    cout << integrator << "     " << movie << endl;
 
     int num_threads;                        // # of OpenMP threads
     #pragma omp parallel
@@ -75,11 +81,10 @@ int main(int argc, char** argv)
     cout << endl << "N = " << N << ", tol = " << tol << ", Time steps = " << num_time_steps << endl;
     cout << "N_cfl = " << n_cfl << ", CFL: " << min(dif_cfl, adv_cfl) << ", dt = " << dt << endl << endl;
 
-    //? Choose problem and integrator
-    string problem = "Diff_Adv_2D";
-    string integrator = "Explicit_Euler";
+
 
     //! Diffusion-Advection (+ Sources)
+    string problem = "Diff_Adv_2D";
     RHS_Dif_Adv_2D RHS(n, dx, dy, velocity); 
 
     if (problem == "Diff_Adv_2D")
