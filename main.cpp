@@ -64,11 +64,11 @@ int main(int argc, char** argv)
     //* Initialise additional parameters
     double dx = X[12] - X[11];                              // Grid spacing
     double dy = Y[12] - Y[11];                              // Grid spacing
-    double velocity = 10;                                   // Advection speed
+    double velocity = 40;                                   // Advection speed
 
     //* Temporal parameters
     double dif_cfl = (dx*dx * dy*dy)/(2*dx*dx + 2*dy*dy);   // Diffusion CFL
-    double adv_cfl = dx*dy/(velocity * (dx + dy));          // Advection CFL
+    double adv_cfl = min(dx/velocity, dy/velocity);         // Advection CFL
     double dt = n_cfl*min(dif_cfl, adv_cfl);                // Step size
 
     double time = 0;                                        // Simulation time elapsed                          
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
         {
             for (int jj = 0; jj< n; jj++)
             {
-                u_init[n*ii + jj] = 1 + exp(-((X[ii] + 0.5)*(X[ii] + 0.5) + (Y[jj] + 0.5)*(Y[jj] + 0.5))/0.01);
+                u_init[n*ii + jj] = 1 + 10*exp(-(((X[ii] + 0.5)*(X[ii] + 0.5)) + ((Y[jj] + 0.5)*(Y[jj] + 0.5)))/0.02);
             }
         }
     }
@@ -166,8 +166,10 @@ int main(int argc, char** argv)
         //? Update solution
         copy_Cpp(u_sol, u, N);
 
-        if (time_steps % 5 == 0)
+        if (time_steps % 500 == 0)
         {
+            double norm = l1norm_Cpp(u_sol, N);
+            cout << "l1 norm of u   : " << norm << endl;
             cout << "Time step      : " << time_steps << endl;
             cout << "Simulation time: " << time << endl << endl;
         }
