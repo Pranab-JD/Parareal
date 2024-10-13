@@ -217,6 +217,16 @@ int main(int argc, char** argv)
     params << setprecision(16) << "Runtime (s): " << time_loop.total() << endl;
     params.close();
 
+    //? Create directory to write final simulation data
+    string final_data = directory + "/Final_data.txt";
+    ofstream data;
+    data.open(final_data); 
+    for(int ii = 0; ii < N; ii++)
+    {
+        data << setprecision(16) << u[ii] << endl;
+    }
+    data.close();
+
     cout << "Simulations complete!" << endl;
 
     return 0;
