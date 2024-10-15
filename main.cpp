@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     //* Initialise additional parameters
     double dx = X[12] - X[11];                              // Grid spacing
     double dy = Y[12] - Y[11];                              // Grid spacing
-    double velocity = 40;                                   // Advection speed
+    double velocity = 10;                                   // Advection speed
 
     //* Temporal parameters
     double dif_cfl = (dx*dx * dy*dy)/(2*dx*dx + 2*dy*dy);   // Diffusion CFL
@@ -110,9 +110,13 @@ int main(int argc, char** argv)
     {
 
     }
-    else if (integrator == "RK2" or "RK4")
+    else if (integrator == "RK2")
     {
         u_temp = (double*)malloc(2*N_size);
+    }
+    else if (integrator == "RK4")
+    {
+        u_temp = (double*)malloc(4*N_size);
     }
     else
     {
@@ -203,6 +207,7 @@ int main(int argc, char** argv)
     //? Create directory to write simulation results/parameters
     int sys_value = system(("mkdir -p ./" + integrator + "/cores_" + to_string(num_threads)).c_str());
     string directory = "./" + integrator + "/cores_" + to_string(num_threads);
+    
     string results = directory + "/Parameters.txt";
     ofstream params;
     params.open(results);
@@ -217,10 +222,10 @@ int main(int argc, char** argv)
     params << setprecision(16) << "Runtime (s): " << time_loop.total() << endl;
     params.close();
 
-    //? Create directory to write final simulation data
-    string final_data = directory + "/Final_data.txt";
+    //? Create file to write final simulation data
+    string final_data = directory + "/dt_cfl_" + to_string(n_cfl) + "_data.txt";
     ofstream data;
-    data.open(final_data); 
+    data.open(final_data);
     for(int ii = 0; ii < N; ii++)
     {
         data << setprecision(16) << u[ii] << endl;
