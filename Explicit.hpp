@@ -52,8 +52,8 @@ template <typename rhs>
 void RK4(rhs RHS, double* u, double* u_sol, double* u_temp, double dt, size_t N)
 {
     //? Assign names and variables
-    double* k1 = &u_temp[0]; double* k2 = &u_temp[N];
-    double* k3 = &u_temp[0]; double* k4 = &u_temp[N];
+    double* k1 = &u_temp[0];   double* k2 = &u_temp[N];
+    double* k3 = &u_temp[2*N]; double* k4 = &u_temp[3*N];
 
     //? Internal stage 1: k1 = dt * RHS(u)
     RHS(u, k1);                                 //* k1 = RHS(u) = du/dt
