@@ -170,7 +170,7 @@ int main(int argc, char** argv)
         //? Update solution
         copy_Cpp(u_sol, u, N);
 
-        if (time_steps % 5 == 0)
+        if (time_steps % 100 == 0)
         {
             cout << "Time step      : " << time_steps << endl;
             cout << "Simulation time: " << time << endl << endl;
