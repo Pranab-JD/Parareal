@@ -29,12 +29,10 @@ int main(int argc, char** argv)
     int num_time_steps = atoi(argv[4]);     // Final simulation time
 
     string integrator = "Explicit_Euler";   // Integrator
-    if (argc >= 6)
-        integrator = argv[5];
+    integrator = argv[5];
 
-    string movie = "no";                    // Default param = "no"
-    if (argc == 7)
-        movie = argv[6];                    // Set to "yes" to write data for plots/movie
+    int output_cycle = -1;                   // How often data is written to files (if you want a movie)
+    output_cycle = atoi(argv[6]);
 
     int num_threads;                        // # of OpenMP threads
     #pragma omp parallel
@@ -125,7 +123,7 @@ int main(int argc, char** argv)
     }
 
     //! Create directories (for movies)
-    if (movie == "yes")
+    if (output_cycle > 0 && output_cycle < num_time_steps)
     {
         int sys_value = system(("mkdir -p ./movie/"));
         string directory = "./movie/";
@@ -174,12 +172,12 @@ int main(int argc, char** argv)
         {
             // double norm = l1norm_Cpp(u_sol, N);
             // cout << "l1 norm of u   : " << norm << endl;
-            cout << "Time step      : " << time_steps << endl;
+            cout << endl << "Time step      : " << time_steps << endl;
             cout << "Simulation time: " << time << endl << endl;
         }
 
         //! Write data to files (for movies)
-        if (time_steps % 5 == 0 && movie == "yes")
+        if (time_steps % output_cycle == 0 && output_cycle > 0)
         {
             cout << "Writing data to files at the " << time_steps << "th time step" << endl;
             string output_data = "./movie/" +  to_string(time_steps) + ".txt";

@@ -14,7 +14,7 @@ bash ../compile.sh
 ```
 4. Run the code
 ``` shell
-./Parareal 8 0.5 1e-10 16 "RK4" "yes"
+./Parareal 8 0.5 1e-10 110 "RK4" 10
 ```
 
 ### Info on input arguments:
@@ -24,4 +24,4 @@ Argument 3: Time step size in terms of n_cfl x dt_cfl (e.g., 0.5 --> 0.5 * dt_cf
 Argument 4: Tolerance, for iterative methods (e.g., 1e-10) <br />
 Argument 5: Number of time steps (e.g., 16) <br />
 Argument 6: Desired integrator (e.g., "RK4")  <br />
-Argument 7: Write data to files every N time steps for movies (if "yes", will create files & write data) <br />
+Argument 7: Write data to files every 10 time steps for movies (set to -1 to not write data) <br />
