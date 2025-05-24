@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Problems.hpp"
-// #include "error_check.hpp"
+#include "error_check.hpp"
 
 using namespace std;
 
