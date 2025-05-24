@@ -12,6 +12,7 @@
 
 #include "Kernels.hpp"
 #include "functions.hpp"
+#include <cublas_v2.h>
 
 namespace LeXInt
 {
@@ -203,6 +204,33 @@ namespace LeXInt
         {
             //* C++
             axpby_Cpp(a, x, b, y, c, z, d, w, v, N);
+        }
+    }
+
+    //? v = ax + by + cz + dw
+    void axpby(double a, double *x, 
+               double b, double *y, 
+               double c, double *z, 
+               double d, double *w,
+               double e, double *v, 
+                         double *u, size_t N, bool GPU)
+    {
+        if (GPU == true)
+        {
+            #ifdef __CUDACC__
+
+            //* CUDA
+            axpby_CUDA<<<(N/128) + 1, 128>>>(a, x, b, y, c, z, d, w, e, v, u, N);
+
+            #else
+            ::std::cout << "Error. Compiled with gcc, not nvcc." << ::std::endl;
+            exit(1);
+            #endif
+        }
+        else
+        {
+            //* C++
+            axpby_Cpp(a, x, b, y, c, z, d, w, e, v, u, N);
         }
     }
 }
