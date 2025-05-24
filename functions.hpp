@@ -106,7 +106,7 @@ void copy_Cpp(double *x, double *y, size_t N)
 
 //? y = ax
 void axpby_Cpp(double a, double *x, 
-                            double *y, size_t N)                    
+                         double *y, size_t N)                    
 {
     #pragma omp parallel for
     for (int ii = 0; ii < N; ii++)
@@ -117,8 +117,8 @@ void axpby_Cpp(double a, double *x,
 
 //? z = ax + by
 void axpby_Cpp(double a, double *x, 
-                double b, double *y, 
-                            double *z, size_t N)
+               double b, double *y, 
+                         double *z, size_t N)
 {
     #pragma omp parallel for
     for (int ii = 0; ii < N; ii++)
@@ -130,9 +130,9 @@ void axpby_Cpp(double a, double *x,
 
 //? w = ax + by + cz
 void axpby_Cpp(double a, double *x,
-                double b, double *y,
-                double c, double *z, 
-                            double *w, size_t N)
+               double b, double *y,
+               double c, double *z, 
+                         double *w, size_t N)
 {
     #pragma omp parallel for
     for (int ii = 0; ii < N; ii++)
@@ -143,10 +143,10 @@ void axpby_Cpp(double a, double *x,
 
 //? v = ax + by + cz + dw
 void axpby_Cpp(double a, double *x,
-                double b, double *y,
-                double c, double *z,
-                double d, double *w,
-                            double *v, size_t N)
+               double b, double *y,
+               double c, double *z,
+               double d, double *w,
+                         double *v, size_t N)
 {
     #pragma omp parallel for
     for (int ii = 0; ii < N; ii++)
@@ -157,11 +157,11 @@ void axpby_Cpp(double a, double *x,
 
 //? u = ax + by + cz + dw + ev
 void axpby_Cpp(double a, double *x,
-                double b, double *y,
-                double c, double *z,
-                double d, double *w,
-                double e, double *v, 
-                          double *u, size_t N)
+               double b, double *y,
+               double c, double *z,
+               double d, double *w,
+               double e, double *v, 
+                         double *u, size_t N)
 {
     #pragma omp parallel for
     for (int ii = 0; ii < N; ii++)
