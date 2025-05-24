@@ -22,7 +22,6 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-
     int index = atoi(argv[1]);              // N = 2^index * 2^index
     double n_cfl = atof(argv[2]);           // dt = n_cfl * dt_cfl
     double tol = atof(argv[3]);             // User-specified tolerance
@@ -31,7 +30,7 @@ int main(int argc, char** argv)
     string integrator = "Explicit_Euler";   // Integrator
     integrator = argv[5];
 
-    int output_cycle = -1;                   // How often data is written to files (if you want a movie)
+    int output_cycle = -1;                  // How often data is written to files (if you want a movie)
     output_cycle = atoi(argv[6]);
 
     int num_threads;                        // # of OpenMP threads
@@ -42,8 +41,8 @@ int main(int argc, char** argv)
     bool GPU_access = false;
 
     //* Initialise parameters
-    int n = pow(2, index);                          // # grid points (1D)
-    int N = n*n;                                    // # grid points (2D)
+    long long n = pow(2, index);                    // # grid points (1D)
+    long long N = n*n;                              // # grid points (2D)
     double xmin = -1;                               // Left boundary (limit)
     double xmax =  1;                               // Right boundary (limit)
     double ymin = -1;                               // Left boundary (limit)
@@ -105,9 +104,7 @@ int main(int argc, char** argv)
     double* u_temp;                                     //* Temporary vector(s) for integrators
 
     if (integrator == "Explicit_Euler")
-    {
-
-    }
+    {  }
     else if (integrator == "RK2")
     {
         u_temp = (double*)malloc(2*N_size);
@@ -142,15 +139,15 @@ int main(int argc, char** argv)
 
         if (integrator == "Explicit_Euler")
         {
-            explicit_Euler(RHS, u, u_sol, u_temp, dt, N);
+            explicit_Euler(RHS, u, u_sol, u_temp, dt, N, GPU_access);
         }
         else if (integrator == "RK2")
         {
-            RK2(RHS, u, u_sol, u_temp, dt, N);
+            RK2(RHS, u, u_sol, u_temp, dt, N, GPU_access);
         }
         else if (integrator == "RK4")
         {
-            RK4(RHS, u, u_sol, u_temp, dt, N);
+            RK4(RHS, u, u_sol, u_temp, dt, N, GPU_access);
         }
         else
         {
@@ -196,8 +193,7 @@ int main(int argc, char** argv)
     cout << endl << "==================================================" << endl;
     cout << "Simulation time            : " << time << endl;
     cout << "Total number of time steps : " << time_steps << endl;
-    cout << "Total number of iterations : " << iters_total << endl;
-    cout << "Total time elapsed (s)     : " << time_loop.total() << endl;
+    cout << "Runtime/Wall-clock time (s): " << time_loop.total() << endl;
     cout << "Number of OpenMP threads   : " << num_threads << endl;
     cout << "==================================================" << endl << endl;
 
@@ -211,13 +207,11 @@ int main(int argc, char** argv)
     params.open(results);
     params << "Grid points: " << N << endl;
     params << "Step size: " << dt << endl;
-    params << "Tolerance (for implicit methods): " << tol << endl;
     params << "Simulation time: " << time << endl;
     params << "Total number of time steps: " << time_steps << endl;
     params << "Number of OpenMP threads: " << num_threads << endl;
     params << endl;
-    params << "Total iterations (for implicit methods): " << iters_total << endl;
-    params << setprecision(16) << "Runtime (s): " << time_loop.total() << endl;
+    params << setprecision(16) << "Runtime/Wall-clock time (s): " << time_loop.total() << endl;
     params.close();
 
     //? Create file to write final simulation data
